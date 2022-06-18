@@ -1,16 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:time_tracker_flutter_course/common_widgets/form_submit_button.dart';
 
-class EmailSignInForm extends StatelessWidget {
+enum EmailSignInFormType { signIn, register }
+
+class EmailSignInForm extends StatefulWidget {
+  @override
+  State<EmailSignInForm> createState() => _EmailSignInFormState();
+}
+
+class _EmailSignInFormState extends State<EmailSignInForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  EmailSignInFormType _formType = EmailSignInFormType.signIn;
   void _submit() {
     print(
         'email: ${_emailController.text}, password: ${_passwordController.text}');
   }
 
+  void _toggleFormType() {
+    setState(() {
+      _formType = _formType == EmailSignInFormType.signIn
+          ? EmailSignInFormType.register
+          : EmailSignInFormType.signIn;
+    });
+    _emailController.clear();
+    _passwordController.clear();
+  }
+
   List<Widget> _buildChildren() {
+    final primaryText = _formType == EmailSignInFormType.signIn
+        ? 'Sign in'
+        : 'Create an account';
+    final secondaryText = _formType == EmailSignInFormType.signIn
+        ? 'Need an account ? Register'
+        : 'Have an account ? Sign in';
     return [
       TextField(
         controller: _emailController,
@@ -29,12 +53,12 @@ class EmailSignInForm extends StatelessWidget {
       ),
       SizedBox(height: 8.0),
       FormSubmitButton(
-        text: 'Sign In',
+        text: primaryText,
         onPressed: _submit,
       ),
       SizedBox(height: 8.0),
       TextButton(
-        onPressed: () {},
+        onPressed: _toggleFormType,
         style: ButtonStyle(
           overlayColor: MaterialStateProperty.all<Color>(
             Colors.grey[300],
@@ -44,7 +68,7 @@ class EmailSignInForm extends StatelessWidget {
           ),
         ),
         child: Text(
-          "Need an account ? Register",
+          secondaryText,
           style: TextStyle(
             color: Colors.black,
           ),
