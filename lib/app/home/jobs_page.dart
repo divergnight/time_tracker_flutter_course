@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:time_tracker_flutter_course/app/home/models/job.dart';
 import 'package:time_tracker_flutter_course/common_widgets/show_alert_dialog.dart';
 import 'package:time_tracker_flutter_course/services/auth.dart';
 import 'package:time_tracker_flutter_course/services/database.dart';
@@ -29,10 +30,7 @@ class JobsPage extends StatelessWidget {
 
   void _createdJob(BuildContext context) {
     final database = Provider.of<Database>(context, listen: false);
-    database.createJob({
-      'name': 'Blogging',
-      'ratePerHour': 10,
-    });
+    database.createJob(Job(name: 'Blobbing', ratePerHour: 10));
   }
 
   @override
