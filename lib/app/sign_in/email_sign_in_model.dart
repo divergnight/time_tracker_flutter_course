@@ -13,4 +13,20 @@ class EmailSignInModel {
   final EmailSignInFormType formType;
   final bool submitted;
   final bool isLoading;
+
+  EmailSignInModel copyWith({
+    String email,
+    String password,
+    EmailSignInFormType formType,
+    bool submitted,
+    bool isLoading,
+  }) {
+    return EmailSignInModel(
+      email: email ?? this.email,
+      password: password ?? this.password,
+      formType: formType ?? this.formType,
+      isLoading: isLoading ?? this.isLoading,
+      submitted: submitted ?? this.submitted,
+    );
+  }
 }
