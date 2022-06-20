@@ -81,7 +81,7 @@ class JobsPage extends StatelessWidget {
 
   Widget _buildContent(BuildContext context) {
     final database = Provider.of<Database>(context, listen: false);
-    return StreamBuilder(
+    return StreamBuilder<List<Job>>(
       stream: database.jobsStream(),
       builder: ((context, snapshot) {
         if (snapshot.hasData) {
@@ -90,6 +90,9 @@ class JobsPage extends StatelessWidget {
           return ListView(
             children: children,
           );
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Some error occured'));
         }
         return Center(child: CircularProgressIndicator());
       }),
