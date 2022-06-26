@@ -31,7 +31,7 @@ class _EditJobPageState extends State<EditJobPage> {
   final FocusNode _ratePerHourFocusNode = FocusNode();
 
   bool isLoading = false;
-  String _name;
+  String _name = "";
   int _ratePerHour;
 
   @override
@@ -167,7 +167,7 @@ class _EditJobPageState extends State<EditJobPage> {
         validator: (value) => value.isNotEmpty ? null : "Name can't be empty",
         enabled: !isLoading,
         onSaved: (value) => _name = value,
-        onFieldSubmitted: (value) => _name = value,
+        onChanged: (value) => _name = value,
         onEditingComplete: _nameComplete,
       ),
       TextFormField(
