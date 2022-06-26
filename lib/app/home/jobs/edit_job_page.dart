@@ -6,25 +6,25 @@ import 'package:time_tracker_flutter_course/common_widgets/show_alert_dialog.dar
 import 'package:time_tracker_flutter_course/common_widgets/show_exception_alert_dialog.dart';
 import 'package:time_tracker_flutter_course/services/database.dart';
 
-class AddJobPage extends StatefulWidget {
-  const AddJobPage({Key key, @required this.database}) : super(key: key);
+class EditJobPage extends StatefulWidget {
+  const EditJobPage({Key key, @required this.database, this.job})
+      : super(key: key);
   final Database database;
+  final Job job;
 
-  static Future<void> show(BuildContext context) async {
+  static Future<void> show(BuildContext context, {Job job}) async {
     final database = Provider.of<Database>(context, listen: false);
     await Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => AddJobPage(
-        database: database,
-      ),
+      builder: (context) => EditJobPage(database: database, job: job),
       fullscreenDialog: true,
     ));
   }
 
   @override
-  State<AddJobPage> createState() => _AddJobPageState();
+  State<EditJobPage> createState() => _EditJobPageState();
 }
 
-class _AddJobPageState extends State<AddJobPage> {
+class _EditJobPageState extends State<EditJobPage> {
   final _formKey = GlobalKey<FormState>();
 
   final FocusNode _nameFocusNode = FocusNode();
@@ -33,6 +33,15 @@ class _AddJobPageState extends State<AddJobPage> {
   bool isLoading = false;
   String _name;
   int _ratePerHour;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.job != null) {
+      _name = widget.job.name;
+      _ratePerHour = widget.job.ratePerHour;
+    }
+  }
 
   @override
   void dispose() {
@@ -93,7 +102,7 @@ class _AddJobPageState extends State<AddJobPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 2.0,
-        title: Text('New Job'),
+        title: Text(widget.job == null ? 'New Job' : 'Edit Job'),
         actions: <Widget>[
           TextButton(
             onPressed: isLoading ? null : _submit,
@@ -149,6 +158,7 @@ class _AddJobPageState extends State<AddJobPage> {
       TextFormField(
         decoration: InputDecoration(labelText: 'Job name'),
         focusNode: _nameFocusNode,
+        initialValue: _name,
         textInputAction: TextInputAction.next,
         validator: (value) => value.isNotEmpty ? null : "Name can't be empty",
         enabled: !isLoading,
@@ -159,6 +169,7 @@ class _AddJobPageState extends State<AddJobPage> {
       TextFormField(
         decoration: InputDecoration(labelText: 'Rate per hour'),
         focusNode: _ratePerHourFocusNode,
+        initialValue: _ratePerHour != null ? '$_ratePerHour' : null,
         keyboardType:
             TextInputType.numberWithOptions(signed: false, decimal: false),
         textInputAction: TextInputAction.done,
