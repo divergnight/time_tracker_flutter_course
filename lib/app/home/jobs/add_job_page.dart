@@ -29,6 +29,7 @@ class _AddJobPageState extends State<AddJobPage> {
   final FocusNode _nameFocusNode = FocusNode();
   final FocusNode _ratePerHourFocusNode = FocusNode();
 
+  bool isLoading = false;
   String _name;
   int _ratePerHour;
 
@@ -54,6 +55,9 @@ class _AddJobPageState extends State<AddJobPage> {
   }
 
   Future<void> _submit() async {
+    setState(() {
+      isLoading = true;
+    });
     if (_validateAndSaveForm()) {
       try {
         final job = Job(name: _name, ratePerHour: _ratePerHour);
@@ -67,6 +71,9 @@ class _AddJobPageState extends State<AddJobPage> {
         );
       }
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -77,7 +84,7 @@ class _AddJobPageState extends State<AddJobPage> {
         title: Text('New Job'),
         actions: <Widget>[
           TextButton(
-            onPressed: _submit,
+            onPressed: isLoading ? null : _submit,
             style: ButtonStyle(
               overlayColor: MaterialStateProperty.all<Color>(
                 Colors.indigo[600],
@@ -132,6 +139,7 @@ class _AddJobPageState extends State<AddJobPage> {
         focusNode: _nameFocusNode,
         textInputAction: TextInputAction.next,
         validator: (value) => value.isNotEmpty ? null : "Name can't be empty",
+        enabled: !isLoading,
         onSaved: (value) => _name = value,
         onFieldSubmitted: (value) => _name = value,
         onEditingComplete: _nameComplete,
@@ -142,6 +150,7 @@ class _AddJobPageState extends State<AddJobPage> {
         keyboardType:
             TextInputType.numberWithOptions(signed: false, decimal: false),
         textInputAction: TextInputAction.done,
+        enabled: !isLoading,
         onSaved: (value) => _ratePerHour = int.tryParse(value) ?? 0,
         onEditingComplete: _submit,
       )
