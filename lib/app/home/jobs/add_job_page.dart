@@ -26,8 +26,23 @@ class AddJobPage extends StatefulWidget {
 class _AddJobPageState extends State<AddJobPage> {
   final _formKey = GlobalKey<FormState>();
 
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _ratePerHourFocusNode = FocusNode();
+
   String _name;
   int _ratePerHour;
+
+  @override
+  void dispose() {
+    _nameFocusNode.dispose();
+    _ratePerHourFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _nameComplete() {
+    final newFocus = _name.isNotEmpty ? _ratePerHourFocusNode : _nameFocusNode;
+    FocusScope.of(context).requestFocus(newFocus);
+  }
 
   bool _validateAndSaveForm() {
     final form = _formKey.currentState;
@@ -114,14 +129,21 @@ class _AddJobPageState extends State<AddJobPage> {
     return [
       TextFormField(
         decoration: InputDecoration(labelText: 'Job name'),
+        focusNode: _nameFocusNode,
+        textInputAction: TextInputAction.next,
         validator: (value) => value.isNotEmpty ? null : "Name can't be empty",
         onSaved: (value) => _name = value,
+        onFieldSubmitted: (value) => _name = value,
+        onEditingComplete: _nameComplete,
       ),
       TextFormField(
         decoration: InputDecoration(labelText: 'Rate per hour'),
+        focusNode: _ratePerHourFocusNode,
         keyboardType:
             TextInputType.numberWithOptions(signed: false, decimal: false),
+        textInputAction: TextInputAction.done,
         onSaved: (value) => _ratePerHour = int.tryParse(value) ?? 0,
+        onEditingComplete: _submit,
       )
     ];
   }
