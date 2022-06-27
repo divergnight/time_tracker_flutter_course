@@ -39,40 +39,46 @@ class JobEntriesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(job.name),
-        centerTitle: true,
-        elevation: 2.0,
-        actions: <Widget>[
-          TextButton(
-            onPressed: () =>
-                EditJobPage.show(context, database: database, job: job),
-            style: ButtonStyle(
-              overlayColor: MaterialStateProperty.all<Color>(
-                Colors.indigo[600],
-              ),
-              padding: MaterialStateProperty.all<EdgeInsets>(
-                EdgeInsets.symmetric(horizontal: 16.0),
-              ),
+    return StreamBuilder<Job>(
+        stream: database.jobStream(jobId: job.id),
+        builder: (context, snapshot) {
+          final job = snapshot.data;
+          final jobName = job?.name ?? '';
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(jobName),
+              centerTitle: true,
+              elevation: 2.0,
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () =>
+                      EditJobPage.show(context, database: database, job: job),
+                  style: ButtonStyle(
+                    overlayColor: MaterialStateProperty.all<Color>(
+                      Colors.indigo[600],
+                    ),
+                    padding: MaterialStateProperty.all<EdgeInsets>(
+                      EdgeInsets.symmetric(horizontal: 16.0),
+                    ),
+                  ),
+                  child: Text(
+                    "Edit",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            child: Text(
-              "Edit",
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Colors.white,
-              ),
+            body: _buildContent(context),
+            floatingActionButton: FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () =>
+                  EditEntryPage.show(context, database: database, job: job),
             ),
-          ),
-        ],
-      ),
-      body: _buildContent(context),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () =>
-            EditEntryPage.show(context, database: database, job: job),
-      ),
-    );
+          );
+        });
   }
 
   Widget _buildContent(BuildContext context) {
