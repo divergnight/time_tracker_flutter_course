@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:time_tracker_flutter_course/common_widgets/date_time_picker.dart';
 import 'package:time_tracker_flutter_course/app/home/job_entries/format.dart';
 import 'package:time_tracker_flutter_course/app/home/models/entry.dart';
@@ -159,7 +160,8 @@ class _EditEntryPageState extends State<EditEntryPage> {
 
   Widget _buildDuration() {
     final currentEntry = _entryFromState();
-    final durationFormatted = Format.hours(currentEntry.durationInHours);
+    final durationFormatted =
+        Provider.of<Format>(context).hours(currentEntry.durationInHours);
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[

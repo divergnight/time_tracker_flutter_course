@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:time_tracker_flutter_course/app/home/job_entries/format.dart';
 import 'package:time_tracker_flutter_course/app/home/models/entry.dart';
 import 'package:time_tracker_flutter_course/app/home/models/job.dart';
@@ -29,14 +30,15 @@ class EntryListTile extends StatelessWidget {
   }
 
   Widget _buildContents(BuildContext context) {
-    final dayOfWeek = Format.dayOfWeek(entry.start);
-    final startDate = Format.date(entry.start);
+    final dayOfWeek = Provider.of<Format>(context).dayOfWeek(entry.start);
+    final startDate = Provider.of<Format>(context).date(entry.start);
     final startTime = TimeOfDay.fromDateTime(entry.start).format(context);
     final endTime = TimeOfDay.fromDateTime(entry.end).format(context);
-    final durationFormatted = Format.hours(entry.durationInHours);
+    final durationFormatted =
+        Provider.of<Format>(context).hours(entry.durationInHours);
 
     final pay = job.ratePerHour * entry.durationInHours;
-    final payFormatted = Format.currency(pay);
+    final payFormatted = Provider.of<Format>(context).currency(pay);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
