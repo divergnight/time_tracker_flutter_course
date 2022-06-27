@@ -108,7 +108,12 @@ class JobEntriesPage extends StatelessWidget {
             background: Container(color: Colors.red),
             direction: DismissDirection.endToStart,
             onDismissed: (direction) => _delete(context, entry),
-            child: Text(entry.id),
+            child: EntryListTile(
+              entry: entry,
+              job: job,
+              onTap: () => EditEntryPage.show(context,
+                  database: database, job: job, entry: entry),
+            ),
           ),
         );
       }),
