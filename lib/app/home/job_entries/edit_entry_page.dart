@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:time_tracker_flutter_course/app/home/job_entries/date_time_picker.dart';
+import 'package:time_tracker_flutter_course/app/home/job_entries/format.dart';
 import 'package:time_tracker_flutter_course/app/home/models/entry.dart';
 import 'package:time_tracker_flutter_course/app/home/models/job.dart';
 import 'package:time_tracker_flutter_course/common_widgets/show_exception_alert_dialog.dart';
@@ -136,15 +138,39 @@ class _EditEntryPageState extends State<EditEntryPage> {
   }
 
   Widget _buildStartDate() {
-    // TODO : DateTimePicker
+    return DateTimePicker(
+      labelText: 'Start',
+      selectedDate: _startDate,
+      selectedTime: _startTime,
+      selectDate: (date) => setState(() => _startDate = date),
+      selectTime: (time) => setState(() => _startTime = time),
+    );
   }
 
   Widget _buildEndDate() {
-    // TODO : DateTimePicker
+    return DateTimePicker(
+      labelText: 'End',
+      selectedDate: _endDate,
+      selectedTime: _endTime,
+      selectDate: (date) => setState(() => _endDate = date),
+      selectTime: (time) => setState(() => _endTime = time),
+    );
   }
 
   Widget _buildDuration() {
-    // TODO : FormatTime
+    final currentEntry = _entryFromState();
+    final durationFormatted = Format.hours(currentEntry.durationInHours);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Text(
+          'Duration: $durationFormatted',
+          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
+    );
   }
 
   Widget _buildComment() {
