@@ -51,33 +51,19 @@ class JobEntriesPage extends StatelessWidget {
               centerTitle: true,
               elevation: 2.0,
               actions: <Widget>[
-                TextButton(
+                IconButton(
                   onPressed: () =>
                       EditJobPage.show(context, database: database, job: job),
-                  style: ButtonStyle(
-                    overlayColor: MaterialStateProperty.all<Color>(
-                      Colors.indigo[600],
-                    ),
-                    padding: MaterialStateProperty.all<EdgeInsets>(
-                      EdgeInsets.symmetric(horizontal: 16.0),
-                    ),
-                  ),
-                  child: Text(
-                    "Edit",
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      color: Colors.white,
-                    ),
-                  ),
+                  icon: Icon(Icons.edit),
+                ),
+                IconButton(
+                  onPressed: () =>
+                      EditEntryPage.show(context, database: database, job: job),
+                  icon: Icon(Icons.add),
                 ),
               ],
             ),
             body: _buildContent(context),
-            floatingActionButton: FloatingActionButton(
-              child: Icon(Icons.add),
-              onPressed: () =>
-                  EditEntryPage.show(context, database: database, job: job),
-            ),
           );
         });
   }
