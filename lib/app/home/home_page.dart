@@ -12,7 +12,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoHomeScaffold(
-        currentTab: _currentTab, onSelectTab: (item) {});
+    return CupertinoHomeScaffold(currentTab: _currentTab, onSelectTab: _select);
+  }
+
+  void _select(TabItem tabItem) {
+    setState(() => _currentTab = tabItem);
   }
 }
