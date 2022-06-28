@@ -6,6 +6,7 @@ import 'package:time_tracker_flutter_course/app/home/jobs/edit_job_page.dart';
 import 'package:time_tracker_flutter_course/app/home/jobs/list_items_builder.dart';
 import 'package:time_tracker_flutter_course/app/home/job_entries/edit_entry_page.dart';
 import 'package:time_tracker_flutter_course/app/home/models/entry.dart';
+import 'package:time_tracker_flutter_course/app/home/models/entry_list_tile_model.dart';
 import 'package:time_tracker_flutter_course/app/home/models/job.dart';
 import 'package:time_tracker_flutter_course/common_widgets/show_exception_alert_dialog.dart';
 import 'package:time_tracker_flutter_course/services/database.dart';
@@ -93,8 +94,8 @@ class JobEntriesPage extends StatelessWidget {
             direction: DismissDirection.endToStart,
             onDismissed: (direction) => _delete(context, entry),
             child: EntryListTile(
-              entry: entry,
               job: job,
+              tileModel: EntryListTileModel(context, entry: entry, job: job),
               onTap: () => EditEntryPage.show(context,
                   database: database, job: job, entry: entry),
             ),

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:time_tracker_flutter_course/app/home/job_entries/format.dart';
-import 'package:time_tracker_flutter_course/app/home/models/entry.dart';
+import 'package:time_tracker_flutter_course/app/home/models/entry_list_tile_model.dart';
 import 'package:time_tracker_flutter_course/app/home/models/job.dart';
 
 class EntryListTile extends StatelessWidget {
   const EntryListTile(
-      {@required this.entry, @required this.job, @required this.onTap});
-  final Entry entry;
+      {@required this.tileModel, @required this.job, @required this.onTap});
+  final EntryListTileModel tileModel;
   final Job job;
   final VoidCallback onTap;
 
@@ -30,39 +28,33 @@ class EntryListTile extends StatelessWidget {
   }
 
   Widget _buildContents(BuildContext context) {
-    final dayOfWeek = Provider.of<Format>(context).dayOfWeek(entry.start);
-    final startDate = Provider.of<Format>(context).date(entry.start);
-    final startTime = TimeOfDay.fromDateTime(entry.start).format(context);
-    final endTime = TimeOfDay.fromDateTime(entry.end).format(context);
-    final durationFormatted =
-        Provider.of<Format>(context).hours(entry.durationInHours);
-
-    final pay = job.ratePerHour * entry.durationInHours;
-    final payFormatted = Provider.of<Format>(context).currency(pay);
+    final valueFormatted = tileModel.format();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Row(children: <Widget>[
-          Text(dayOfWeek, style: TextStyle(fontSize: 18.0, color: Colors.grey)),
+          Text(valueFormatted['dayOfWeek'],
+              style: TextStyle(fontSize: 18.0, color: Colors.grey)),
           SizedBox(width: 15.0),
-          Text(startDate, style: TextStyle(fontSize: 18.0)),
+          Text(valueFormatted['startDate'], style: TextStyle(fontSize: 18.0)),
           if (job.ratePerHour > 0.0) ...<Widget>[
             Expanded(child: Container()),
             Text(
-              payFormatted,
+              valueFormatted['payFormatted'],
               style: TextStyle(fontSize: 16.0, color: Colors.green[700]),
             ),
           ],
         ]),
         Row(children: <Widget>[
-          Text('$startTime - $endTime', style: TextStyle(fontSize: 16.0)),
+          Text('${valueFormatted['startTime']} - ${valueFormatted['endTime']}',
+              style: TextStyle(fontSize: 16.0)),
           Expanded(child: Container()),
-          Text(durationFormatted, style: TextStyle(fontSize: 16.0)),
+          Text(valueFormatted['duration'], style: TextStyle(fontSize: 16.0)),
         ]),
-        if (entry.comment.isNotEmpty)
+        if (valueFormatted['comment'].isNotEmpty)
           Text(
-            entry.comment,
+            valueFormatted['comment'],
             style: TextStyle(fontSize: 12.0),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
