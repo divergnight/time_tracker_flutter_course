@@ -41,7 +41,7 @@ class EntryListTile extends StatelessWidget {
           if (job.ratePerHour > 0.0) ...<Widget>[
             Expanded(child: Container()),
             Text(
-              valueFormatted['payFormatted'],
+              valueFormatted['pay'],
               style: TextStyle(fontSize: 16.0, color: Colors.green[700]),
             ),
           ],
