@@ -18,7 +18,7 @@ class EditEntryPage extends StatefulWidget {
 
   static Future<void> show(BuildContext context,
       {Database database, Job job, Entry entry}) async {
-    await Navigator.of(context).push(MaterialPageRoute(
+    await Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(
       builder: (context) =>
           EditEntryPage(database: database, job: job, entry: entry),
       fullscreenDialog: true,
