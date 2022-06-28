@@ -32,8 +32,7 @@ class EntriesPage extends StatelessWidget {
       builder: (context, snapshot) {
         return ListItemsBuilder<EntriesListTileModel>(
           snapshot: snapshot,
-          itemBuilder: (context, model) =>
-              Text(model.leadingText, style: TextStyle(fontSize: 16.0)),
+          itemBuilder: (context, model) => EntriesListTile(model: model),
         );
       },
     );
