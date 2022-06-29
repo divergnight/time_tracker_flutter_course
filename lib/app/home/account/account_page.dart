@@ -33,7 +33,6 @@ class AccountPage extends StatelessWidget {
     final auth = Provider.of<AuthBase>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Account'),
         centerTitle: true,
         elevation: 2.0,
         actions: [
@@ -72,15 +71,14 @@ class AccountPage extends StatelessWidget {
           radius: 50,
           photoUrl: user.photoURL,
         ),
-        SizedBox(height: 8.0),
-        if (user.displayName != null)
-          Text(
-            user.displayName,
-            style: TextStyle(
-              color: Colors.white,
-            ),
+        SizedBox(height: 16.0),
+        Text(
+          user.displayName != null ? user.displayName : user.uid,
+          style: TextStyle(
+            color: Colors.white,
           ),
-        SizedBox(height: 8.0),
+        ),
+        SizedBox(height: 16.0),
       ],
     );
   }
