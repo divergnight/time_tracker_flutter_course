@@ -12,9 +12,7 @@ void main() {
         'name': 'Blogging',
         'ratePerHour': 10,
       }, 'abc');
-      expect(job.name, 'Blogging');
-      expect(job.ratePerHour, 10);
-      expect(job.id, 'abc');
+      expect(job, Job(name: 'Blogging', ratePerHour: 10, id: 'abc'));
     });
   });
 }
