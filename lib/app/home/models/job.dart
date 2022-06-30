@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:meta/meta.dart';
 
 class Job {
   Job({@required this.id, @required this.name, @required this.ratePerHour});
@@ -13,6 +12,7 @@ class Job {
     }
 
     final String name = data['name'];
+    if (name == null) return null;
     final int ratePerHour = data['ratePerHour'];
     return Job(
       id: documentId,
@@ -40,4 +40,7 @@ class Job {
         name == otherJob.name &&
         ratePerHour == otherJob.ratePerHour;
   }
+
+  @override
+  String toString() => 'id: $id, name: $name, ratePerHour: $ratePerHour';
 }
