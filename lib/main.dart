@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider<Format>(
-      create: (context) => Format(),
+      create: (context) => Format.singleton,
       child: Provider<AuthBase>(
         create: (context) => Auth(),
         child: MaterialApp(
