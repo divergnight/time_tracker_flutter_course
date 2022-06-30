@@ -30,6 +30,10 @@ void main() {
     test('2019-08-16', () {
       expect(Format.singleton.date(DateTime(2019, 08, 16)), 'Aug 16, 2019');
     });
+
+    test('2019', () {
+      expect(Format.singleton.date(DateTime(2019)), 'Jan 1, 2019');
+    });
   });
 
   group('dayOfWeek - US Locale', () {
@@ -64,6 +68,9 @@ void main() {
     });
     test('negative', () {
       expect(Format.singleton.currency(-5), '-\$5');
+    });
+    test('negative', () {
+      expect(Format.singleton.currency(null), '');
     });
   });
 }

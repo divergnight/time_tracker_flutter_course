@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:meta/meta.dart';
 
 class Entry {
@@ -24,6 +26,7 @@ class Entry {
     final String jobId = data['jobId'];
     final int startMilliseconds = data['start'];
     final int endMilliseconds = data['end'];
+    if (startMilliseconds == null || endMilliseconds == null) return null;
     final String comment = data['comment'];
     return Entry(
       id: documentId,
@@ -35,6 +38,7 @@ class Entry {
   }
 
   Map<String, dynamic> toMap() {
+    if (jobId == null || start == null || end == null) return null;
     return <String, dynamic>{
       'jobId': jobId,
       'start': start.millisecondsSinceEpoch,
@@ -42,4 +46,23 @@ class Entry {
       'comment': comment,
     };
   }
+
+  @override
+  int get hashCode => hashValues(id, jobId, start, end, comment);
+
+  @override
+  bool operator ==(other) {
+    if (identical(this, other)) return true;
+    if (runtimeType != other.runtimeType) return false;
+    final Entry otherEntry = other;
+    return id == otherEntry.id &&
+        jobId == otherEntry.jobId &&
+        start == otherEntry.start &&
+        end == otherEntry.end &&
+        comment == otherEntry.comment;
+  }
+
+  @override
+  String toString() =>
+      'id: $id, jobId: $jobId, start: $start, end: $end, comment: $comment';
 }

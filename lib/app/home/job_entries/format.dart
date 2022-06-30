@@ -20,7 +20,7 @@ class Format {
   }
 
   String currency(double pay) {
-    if (pay != 0.0) {
+    if (pay != 0.0 && pay != null) {
       final formatter = NumberFormat.simpleCurrency(decimalDigits: 0);
       return formatter.format(pay);
     }

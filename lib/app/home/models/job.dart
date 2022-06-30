@@ -13,7 +13,7 @@ class Job {
 
     final String name = data['name'];
     if (name == null) return null;
-    final int ratePerHour = data['ratePerHour'];
+    final int ratePerHour = data['ratePerHour'] ?? 0;
     return Job(
       id: documentId,
       name: name,
@@ -22,9 +22,10 @@ class Job {
   }
 
   Map<String, dynamic> toMap() {
+    if (name == null) return null;
     return {
       'name': name,
-      'ratePerHour': ratePerHour,
+      'ratePerHour': ratePerHour ?? 0,
     };
   }
 
