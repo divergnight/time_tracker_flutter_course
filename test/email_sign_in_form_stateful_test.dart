@@ -28,16 +28,38 @@ void main() {
     );
   }
 
-  testWidgets(
-      "WHEN user doesn't enter the email and password"
-      "AND user taps on the sign-in button"
-      "THEN  signInWithEmailAndPassword is not called",
-      (WidgetTester tester) async {
-    await pumpEmailSignInForm(tester);
+  group('sign in', () {
+    testWidgets(
+        "WHEN user doesn't enter the email and password"
+        "AND user taps on the sign-in button"
+        "THEN  signInWithEmailAndPassword is not called",
+        (WidgetTester tester) async {
+      await pumpEmailSignInForm(tester);
 
-    final signInButton = find.text('Sign in');
-    await tester.tap(signInButton);
+      const email = 'email@email.com';
+      const password = 'password';
 
-    verifyNever(mockAuth.signInWithEmailAndPassword(any, any));
+      final emailField = find.byKey(Key('email'));
+      expect(emailField, findsOneWidget);
+      await tester.enterText(emailField, email);
+
+      final passwordField = find.byKey(Key('password'));
+      expect(passwordField, findsOneWidget);
+      await tester.enterText(passwordField, password);
+
+      await tester.pump();
+
+      final signInButton = find.text('Sign in');
+      await tester.tap(signInButton);
+
+      verify(
+          mockAuth.signInWithEmailAndPassword('email@email.com', 'password'));
+    });
+
+    testWidgets(
+        "WHEN user enters the email and password"
+        "AND user taps on the sign-in button"
+        "THEN  signInWithEmailAndPassword is called",
+        (WidgetTester tester) async {});
   });
 }
