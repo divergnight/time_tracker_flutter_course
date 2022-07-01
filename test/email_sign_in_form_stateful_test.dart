@@ -43,6 +43,16 @@ void main() {
         FirebaseAuthException(code: 'ERROR_WRONG_PASSWORD', message: ''));
   }
 
+  void stubCreateUserWithEmailAndPasswordSucceeds() {
+    when(mockAuth.createUserWithEmailAndPassword(any, any))
+        .thenAnswer((_) => Future<User>.value(MockUser()));
+  }
+
+  void stubCreateUserWithEmailAndPasswordThrows() {
+    when(mockAuth.createUserWithEmailAndPassword(any, any)).thenThrow(
+        FirebaseAuthException(code: 'INVALID_PASSWORD', message: ''));
+  }
+
   group('sign in', () {
     testWidgets(
         "WHEN user doesn't enter the email and password"
@@ -63,7 +73,7 @@ void main() {
         "WHEN user enters a valid email and password"
         "AND user taps on the sign-in button"
         "THEN  signInWithEmailAndPassword is called"
-        "AND user not signed in", (WidgetTester tester) async {
+        "AND user signed in", (WidgetTester tester) async {
       var signedIn = false;
       await pumpEmailSignInForm(tester, onSignedIn: (() => signedIn = true));
 
@@ -94,7 +104,7 @@ void main() {
         "WHEN user enters an invalid email and password"
         "AND user taps on the sign-in button"
         "THEN  signInWithEmailAndPassword is called"
-        "AND user not not signed in", (WidgetTester tester) async {
+        "AND user not signed in", (WidgetTester tester) async {
       var signedIn = false;
       await pumpEmailSignInForm(tester, onSignedIn: (() => signedIn = true));
 
@@ -138,11 +148,48 @@ void main() {
 
     testWidgets(
         "WHEN user taps on the secondary button"
-        "AND user enters the email and password"
+        "AND user enters a valid email and password"
         "AND user taps on the register button"
-        "THEN createUserWithEmailAndPassword is called",
-        (WidgetTester tester) async {
+        "THEN createUserWithEmailAndPassword is called"
+        "AND user signed in", (WidgetTester tester) async {
       await pumpEmailSignInForm(tester);
+      stubCreateUserWithEmailAndPasswordSucceeds();
+
+      final registerButton = find.text('Need an account ? Register');
+      await tester.tap(registerButton);
+
+      await tester.pump();
+
+      const email = 'email@email.com';
+      const password = 'password';
+
+      final emailField = find.byKey(Key('email'));
+      expect(emailField, findsOneWidget);
+      await tester.enterText(emailField, email);
+
+      final passwordField = find.byKey(Key('password'));
+      expect(passwordField, findsOneWidget);
+      await tester.enterText(passwordField, password);
+
+      await tester.pump();
+
+      final createAccountButton = find.text('Create an account');
+      expect(createAccountButton, findsOneWidget);
+      await tester.tap(createAccountButton);
+
+      verify(mockAuth.createUserWithEmailAndPassword(
+              'email@email.com', 'password'))
+          .called(1);
+    });
+
+    testWidgets(
+        "WHEN user taps on the secondary button"
+        "AND user enters an invalid email and password"
+        "AND user taps on the register button"
+        "THEN createUserWithEmailAndPassword is called"
+        "AND user not signed in", (WidgetTester tester) async {
+      await pumpEmailSignInForm(tester);
+      stubCreateUserWithEmailAndPasswordThrows();
 
       final registerButton = find.text('Need an account ? Register');
       await tester.tap(registerButton);
