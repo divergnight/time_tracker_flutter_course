@@ -7,15 +7,17 @@ import 'package:time_tracker_flutter_course/common_widgets/show_exception_alert_
 import 'package:time_tracker_flutter_course/services/auth.dart';
 
 class EmailSignInFormChangeNotifier extends StatefulWidget {
-  EmailSignInFormChangeNotifier({@required this.model});
+  EmailSignInFormChangeNotifier({@required this.model, this.onSignedIn});
   final EmailSignInChangeModel model;
+  final VoidCallback onSignedIn;
 
-  static Widget create(BuildContext context) {
+  static Widget create(BuildContext context, {VoidCallback onSignedIn}) {
     final auth = Provider.of<AuthBase>(context, listen: false);
     return ChangeNotifierProvider<EmailSignInChangeModel>(
       create: (_) => EmailSignInChangeModel(auth: auth),
       child: Consumer<EmailSignInChangeModel>(
-        builder: (_, model, __) => EmailSignInFormChangeNotifier(model: model),
+        builder: (_, model, __) =>
+            EmailSignInFormChangeNotifier(model: model, onSignedIn: onSignedIn),
       ),
     );
   }
@@ -46,7 +48,9 @@ class _EmailSignInFormChangeNotifierState
   void _submit() async {
     try {
       await model.submit();
-      Navigator.of(context).pop();
+      if (widget.onSignedIn != null) {
+        widget.onSignedIn();
+      }
     } on FirebaseAuthException catch (e) {
       showExceptionAlertDialog(
         context,
@@ -102,6 +106,7 @@ class _EmailSignInFormChangeNotifierState
 
   TextField _buildPasswordTextField() {
     return TextField(
+      key: Key('password'),
       controller: _passwordController,
       focusNode: _passwordFocusNode,
       decoration: InputDecoration(
@@ -118,6 +123,7 @@ class _EmailSignInFormChangeNotifierState
 
   TextField _buildEmailTextField() {
     return TextField(
+      key: Key('email'),
       controller: _emailController,
       focusNode: _emailFocusNode,
       decoration: InputDecoration(
