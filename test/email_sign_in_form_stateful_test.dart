@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 import 'package:time_tracker_flutter_course/app/sign_in/email_sign_in_form_stateful.dart';
+import 'package:time_tracker_flutter_course/app/sign_in/sing_in_button.dart';
 import 'package:time_tracker_flutter_course/services/auth.dart';
 
 class MockAuth extends Mock implements AuthBase {}
@@ -26,4 +27,17 @@ void main() {
       ),
     );
   }
+
+  testWidgets(
+      "WHEN user doesn't enter the email and password"
+      "AND user taps on the sign-in button"
+      "THEN  signInWithEmailAndPassword is not called",
+      (WidgetTester tester) async {
+    await pumpEmailSignInForm(tester);
+
+    final signInButton = find.text('Sign in');
+    await tester.tap(signInButton);
+
+    verifyNever(mockAuth.signInWithEmailAndPassword(any, any));
+  });
 }
