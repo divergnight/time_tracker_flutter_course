@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -36,6 +38,19 @@ void main() {
         (WidgetTester tester) async {
       await pumpEmailSignInForm(tester);
 
+      final signInButton = find.text('Sign in');
+      await tester.tap(signInButton);
+
+      verifyNever(mockAuth.signInWithEmailAndPassword(any, any));
+    });
+
+    testWidgets(
+        "WHEN user enters the email and password"
+        "AND user taps on the sign-in button"
+        "THEN  signInWithEmailAndPassword is called",
+        (WidgetTester tester) async {
+      await pumpEmailSignInForm(tester);
+
       const email = 'email@email.com';
       const password = 'password';
 
@@ -55,11 +70,47 @@ void main() {
       verify(
           mockAuth.signInWithEmailAndPassword('email@email.com', 'password'));
     });
+  });
+  group('register', () {
+    testWidgets(
+        "AND user taps on the secondary button"
+        "THEN form toggles to registration mode", (WidgetTester tester) async {
+      await pumpEmailSignInForm(tester);
+
+      final registerButton = find.text('Need an account ? Register');
+      await tester.tap(registerButton);
+
+      await tester.pump();
+
+      final createAccountButton = find.text('Create an account');
+      expect(createAccountButton, findsOneWidget);
+    });
 
     testWidgets(
         "WHEN user enters the email and password"
         "AND user taps on the sign-in button"
         "THEN  signInWithEmailAndPassword is called",
-        (WidgetTester tester) async {});
+        (WidgetTester tester) async {
+      await pumpEmailSignInForm(tester);
+
+      const email = 'email@email.com';
+      const password = 'password';
+
+      final emailField = find.byKey(Key('email'));
+      expect(emailField, findsOneWidget);
+      await tester.enterText(emailField, email);
+
+      final passwordField = find.byKey(Key('password'));
+      expect(passwordField, findsOneWidget);
+      await tester.enterText(passwordField, password);
+
+      await tester.pump();
+
+      final signInButton = find.text('Sign in');
+      await tester.tap(signInButton);
+
+      verify(
+          mockAuth.signInWithEmailAndPassword('email@email.com', 'password'));
+    });
   });
 }
