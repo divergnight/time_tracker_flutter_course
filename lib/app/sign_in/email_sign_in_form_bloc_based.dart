@@ -8,15 +8,17 @@ import 'package:time_tracker_flutter_course/common_widgets/show_exception_alert_
 import 'package:time_tracker_flutter_course/services/auth.dart';
 
 class EmailSignInFormBlocBased extends StatefulWidget {
-  EmailSignInFormBlocBased({@required this.bloc});
+  EmailSignInFormBlocBased({@required this.bloc, this.onSignedIn});
   final EmailSignInBloc bloc;
+  final VoidCallback onSignedIn;
 
-  static Widget create(BuildContext context) {
+  static Widget create(BuildContext context, {VoidCallback onSignedIn}) {
     final auth = Provider.of<AuthBase>(context, listen: false);
     return Provider<EmailSignInBloc>(
       create: (_) => EmailSignInBloc(auth: auth),
       child: Consumer<EmailSignInBloc>(
-        builder: (_, bloc, __) => EmailSignInFormBlocBased(bloc: bloc),
+        builder: (_, bloc, __) =>
+            EmailSignInFormBlocBased(bloc: bloc, onSignedIn: onSignedIn),
       ),
       dispose: (_, bloc) => bloc.dispose(),
     );
@@ -45,7 +47,9 @@ class _EmailSignInFormBlocBasedState extends State<EmailSignInFormBlocBased> {
   void _submit() async {
     try {
       await widget.bloc.submit();
-      Navigator.of(context).pop();
+      if (widget.onSignedIn != null) {
+        widget.onSignedIn();
+      }
     } on FirebaseAuthException catch (e) {
       showExceptionAlertDialog(
         context,
@@ -101,6 +105,7 @@ class _EmailSignInFormBlocBasedState extends State<EmailSignInFormBlocBased> {
 
   TextField _buildPasswordTextField(EmailSignInModel model) {
     return TextField(
+      key: Key('password'),
       controller: _passwordController,
       focusNode: _passwordFocusNode,
       decoration: InputDecoration(
@@ -117,6 +122,7 @@ class _EmailSignInFormBlocBasedState extends State<EmailSignInFormBlocBased> {
 
   TextField _buildEmailTextField(EmailSignInModel model) {
     return TextField(
+      key: Key('email'),
       controller: _emailController,
       focusNode: _emailFocusNode,
       decoration: InputDecoration(
