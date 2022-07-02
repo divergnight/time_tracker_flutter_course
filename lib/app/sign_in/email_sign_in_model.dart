@@ -63,18 +63,13 @@ class EmailSignInModel with EmailAndPasswordValidators {
   }
 
   @override
-  String toString() {
-    return 'email: $email, password: $password, formType: $formType, isLoading: $isLoading, submitted: $submitted';
-  }
-
-  @override
   int get hashCode =>
       hashValues(email, password, formType, isLoading, submitted);
 
   @override
   bool operator ==(other) {
     if (identical(this, other)) return true;
-    if (this.runtimeType != other.runtimeType) return false;
+    if (runtimeType != other.runtimeType) return false;
     final EmailSignInModel otherModel = other;
     return email == otherModel.email &&
         password == otherModel.password &&
@@ -82,4 +77,8 @@ class EmailSignInModel with EmailAndPasswordValidators {
         isLoading == otherModel.isLoading &&
         submitted == otherModel.submitted;
   }
+
+  @override
+  String toString() =>
+      'email: $email, password: $password, formType: $formType, isLoading: $isLoading, submitted: $submitted';
 }
