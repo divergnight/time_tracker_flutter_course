@@ -10,9 +10,11 @@ import 'mocks.dart';
 
 void main() {
   MockAuth mockAuth;
+  MockNavigatorObserver mockNavigatorObserver;
 
   setUp(() {
     mockAuth = MockAuth();
+    mockNavigatorObserver = MockNavigatorObserver();
   });
 
   Future<void> pumpSignInPage(WidgetTester tester) async {
@@ -23,12 +25,22 @@ void main() {
           home: Builder(
             builder: (context) => SignInPage.create(context),
           ),
+          navigatorObservers: [mockNavigatorObserver],
         ),
       ),
     );
+    verify(mockNavigatorObserver.didPush(any, any)).called(1);
   }
 
   testWidgets('email & password navigation', (WidgetTester tester) async {
     await pumpSignInPage(tester);
+
+    final emailSignInButton = find.byKey(SignInPage.emailPasswordKey);
+    expect(emailSignInButton, findsOneWidget);
+
+    await tester.tap(emailSignInButton);
+    await tester.pumpAndSettle();
+
+    verify(mockNavigatorObserver.didPush(any, any)).called(1);
   });
 }
